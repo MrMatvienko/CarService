@@ -1,16 +1,40 @@
 import express from "express";
-import { carsRouter } from "./routers/carRouter.js";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import cors from "cors";
+import { carsRouter } from "./routers/carsRouter.js";
+dotenv.config();
 const app = express();
+app.use(cors());
+
+const { MONGO_URL } = process.env;
+console.log("MONGO_URL:", MONGO_URL);
+mongoose
+  .connect(MONGO_URL)
+  .then(() => {
+    console.log("✅ Connected directly");
+  })
+  .catch((err) => {
+    console.log("❌ Error direct connect", err);
+  });
 
 app.use(express.json());
 
-app.use("/cars", carsRouter);
+const pathPrefix = "api/v1";
 
-app.get("/cars", carsRouter);
+app.use(`/${pathPrefix}/cars`, carsRouter);
 
-app.get("/cars/:id", carsRouter);
-
-app.delete("/cars/:id", carsRouter);
+app.all("*", (req, res) => {
+  res.status(404).json({
+    msg: "Oops! Resourse not found!",
+  });
+});
+app.use((err, req, res, next) => {
+  console.log(`Error: ${err.message}`);
+  res.status(500).json({
+    msg: err.message,
+  });
+});
 
 const PORT = 3000;
 app.listen(PORT, () => {

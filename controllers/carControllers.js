@@ -1,22 +1,13 @@
 import { readFile, writeFile } from "fs/promises";
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid";
+import { Cars } from "../models/carModels.js";
+import { createCarValidator } from "../utils/carValidator.js";
 
 export const addNewCar = async (req, res) => {
   try {
-    const { brand, price } = req.body;
+    const { value, error } = createCarValidator(req.body);
 
-    const newCar = {
-      id: nanoid(),
-      brand,
-      price,
-    };
-
-    const carsDB = await readFile("data.json");
-    const cars = JSON.parse(carsDB);
-
-    cars.push(newCar);
-
-    await writeFile("data.json", JSON.stringify(cars));
+    const newCar = await Cars.create(value);
 
     return res.status(201).json({
       msg: "Success!",
@@ -29,8 +20,7 @@ export const addNewCar = async (req, res) => {
 
 export const geAllCar = async (req, res) => {
   try {
-    const carsDB = await readFile("data.json");
-    const cars = JSON.parse(carsDB);
+    const cars = await Cars.find();
 
     return res.status(200).json({
       msg: "Success!",
@@ -42,9 +32,9 @@ export const geAllCar = async (req, res) => {
 };
 export const getOneCar = async (req, res) => {
   try {
-    const carsDB = await readFile("data.json");
-    const cars = JSON.parse(carsDB);
-    const car = cars.find((item) => item.id === req.params.id);
+    const { id } = req.params;
+    const car = await Cars.findById(id);
+
     return res.status(200).json({
       msg: "Success!",
       car,
@@ -61,9 +51,7 @@ export const deleteOneCar = async (req, res) => {
 
     const carIndex = cars.findIndex((item) => item.id === req.params.id);
 
-    if (carIndex === -1) {
-      return res.status(404).json({ msg: "Car not found" });
-    }
+    if (carIndex === -1) return res.status(404).json({ msg: "Car not found" });
 
     const deleteCar = cars[carIndex];
     cars.splice(carIndex, 1);

@@ -8,7 +8,5 @@ import {
 
 export const carsRouter = Router();
 
-carsRouter.post("/", addNewCar);
-carsRouter.get("/", geAllCar);
-carsRouter.get("/:id", getOneCar);
-carsRouter.delete("/:id", deleteOneCar);
+carsRouter.route("/").post(addNewCar).get(geAllCar);
+carsRouter.route("/:id").get(getOneCar).delete(deleteOneCar);
