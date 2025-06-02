@@ -46,21 +46,12 @@ export const getOneCar = async (req, res) => {
 
 export const deleteOneCar = async (req, res) => {
   try {
-    const carsDB = await readFile("data.json");
-    const cars = JSON.parse(carsDB);
-
-    const carIndex = cars.findIndex((item) => item.id === req.params.id);
-
-    if (carIndex === -1) return res.status(404).json({ msg: "Car not found" });
-
-    const deleteCar = cars[carIndex];
-    cars.splice(carIndex, 1);
-
-    await writeFile("data.json", JSON.stringify(cars));
+    const { id } = req.params;
+    const cars = await Cars.findByIdAndDelete(id);
 
     return res.status(200).json({
       msg: "Success!",
-      deleteCar,
+      cars,
     });
   } catch (error) {
     console.log(error);
