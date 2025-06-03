@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 
 const uri = process.env.MONGO_URL;
-console.log("MONGO_URL:", MONGO_URL);
+
 mongoose
   .connect(uri)
   .then(() => {
