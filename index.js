@@ -7,10 +7,10 @@ dotenv.config();
 const app = express();
 app.use(cors());
 
-const { MONGO_URL } = process.env;
+const uri = process.env.MONGO_URL;
 console.log("MONGO_URL:", MONGO_URL);
 mongoose
-  .connect(MONGO_URL)
+  .connect(uri)
   .then(() => {
     console.log("✅ Connected directly");
   })
