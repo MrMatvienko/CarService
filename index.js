@@ -24,6 +24,10 @@ const pathPrefix = "api/v1";
 
 app.use(`/${pathPrefix}/cars`, carsRouter);
 
+app.get("/", (req, res) => {
+  res.send("🚗 Welcome to CarService API!");
+});
+
 app.all("*", (req, res) => {
   res.status(404).json({
     msg: "Oops! Resourse not found!",
