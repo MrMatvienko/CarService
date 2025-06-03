@@ -54,6 +54,24 @@ export const deleteOneCar = async (req, res) => {
       cars,
     });
   } catch (error) {
+    res.status(404).json({ message: "Contact not found" });
+  }
+};
+export const updateCarDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+    const car = await Cars.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+    if (!car) {
+      return res.status(404).json({ msg: "Car not found" });
+    }
+    return res.status(200).json({
+      msg: "Success!",
+      car,
+    });
+  } catch (error) {
     console.log(error);
   }
 };
