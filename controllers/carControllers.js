@@ -45,8 +45,8 @@ export const getAllCars = async (req, res, next) => {
     const cars = await Cars.find();
 
     return res.status(200).json({
-      msg: "Success! All cars retrieved.",
       cars,
+      msg: "Success! All cars retrieved.",
     });
   } catch (error) {
     next(error);
