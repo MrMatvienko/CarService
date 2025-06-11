@@ -5,18 +5,29 @@ const carSchema = new Schema(
     title: {
       type: String,
       required: true,
+      trim: true,
     },
     brand: {
       type: String,
       required: true,
+      trim: true,
     },
-    mileage: {
+    year: {
       type: Number,
       required: true,
+      min: 1900,
+      max: new Date().getFullYear() + 1,
     },
     price: {
       type: Number,
       required: true,
+      min: 0,
+    },
+
+    article: {
+      type: Number,
+      required: true,
+      unique: true,
     },
   },
   {
@@ -25,4 +36,12 @@ const carSchema = new Schema(
   }
 );
 
+carSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    if (ret.article) {
+      ret.article = `${String(ret.article).padStart(3, "0")}`;
+    }
+    return ret;
+  },
+});
 export const Cars = model("Car", carSchema);
