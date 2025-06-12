@@ -23,12 +23,23 @@ const carSchema = new Schema(
       required: true,
       min: 0,
     },
+    mileage: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
 
     article: {
       type: Number,
       required: true,
       unique: true,
     },
+    images: [
+      {
+        url: { type: String, required: true },
+        public_id: { type: String, required: true }, // Зберігаємо public_id для видалення
+      },
+    ],
   },
   {
     timestamps: true,
