@@ -12,7 +12,6 @@ export const addNewCar = async (req, res, next) => {
     console.log("req.files (інформація про завантажені файли):", req.files); // ЗВЕРНІТЬ УВАГУ: req.files
     // --- Кінець логування для діагностики ---
 
-    // 1. Валідація вхідних даних (текстові поля)
     const { error, value } = createCarValidator(req.body);
     if (error) {
       console.error(
