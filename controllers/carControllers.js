@@ -64,20 +64,26 @@ export const addNewCar = async (req, res, next) => {
 
 export const getAllCars = async (req, res, next) => {
   try {
-    const { brand, skip = 0, limit = 6 } = req.query;
+    const { brand, page = 1, limit = 6 } = req.query;
+
     const filter = {};
     if (brand) filter.brand = brand;
 
-    const cars = await Cars.find(filter)
-      .skip(Number(skip))
-      .limit(Number(limit));
+    const pageNum = Number(page);
+    const limitNum = Number(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const cars = await Cars.find(filter).skip(skip).limit(limitNum);
 
     const total = await Cars.countDocuments(filter);
 
     return res.status(200).json({
-      msg: "Success! Cars retrieved with filter and pagination.",
+      msg: "Success!",
       cars,
       total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum),
     });
   } catch (error) {
     next(error);
@@ -155,6 +161,14 @@ export const updateCarByArticle = async (req, res, next) => {
     if (!updatedCar) return res.status(404).json({ msg: "Car not found." });
 
     res.status(200).json({ msg: "Car updated.", updatedCar });
+  } catch (error) {
+    next(error);
+  }
+};
+export const getAllBrands = async (req, res, next) => {
+  try {
+    const brands = await Cars.distinct("brand");
+    res.status(200).json({ brands });
   } catch (error) {
     next(error);
   }
