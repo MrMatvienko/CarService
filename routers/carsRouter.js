@@ -8,9 +8,11 @@ import {
   updateCarByArticle,
 } from "../controllers/carControllers.js";
 import { uploadMultipleImages } from "../middlewares/uploadImage.js";
+import { checkAdminPassword } from "../controllers/authAdmin.js";
 
 export const carsRouter = Router();
 
+carsRouter.post("/admin-login", checkAdminPassword);
 carsRouter.route("/").post(uploadMultipleImages, addNewCar).get(getAllCars);
 carsRouter.get("/brands", getAllBrands);
 carsRouter.get("/:article", getCarByArticle);
